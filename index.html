@@ -450,44 +450,42 @@
 
     <main class="main">
       <section id="hero" class="section hero">
-        <div class="eyebrow">Interactive Draft</div>
+        <div class="eyebrow">Interactive Inductive Grammar Learning</div>
         <h2>重新理解 If 假設句型</h2>
-        <p>這份版本不是直接把投影片搬上網頁，而是把內容改造成一條更適合學生自己觀察規律的學習路線：先挑規則、再被例句打破、再從用途與時間的角度慢慢重建理解。</p>
-        <div class="chips">
-          <div class="chip">先判斷哪個規則可信</div>
-          <div class="chip">再觀察句子用途</div>
-          <div class="chip">再釐清時態能不能區分</div>
-          <div class="chip">最後整理成系統</div>
-        </div>
+        <p>假設句型在傳統文法書的教學中，充斥著片面且脫離實際使用方式的規則。這個互動式網頁將幫助學生透過觀察規律的學習路線，用正確的角度看待假設句型的文法規則。過程中，學生將回顧過去學習的規則，並藉由真實生活中的例句打破傳統迷思及錯誤觀念，最後從「溝通目的」為出發點，慢慢重建理解，並且串聯過去所學的動詞變化規則。</p>
       </section>
 
       <section id="myths" class="section">
         <h2>1. 打破常見迷思</h2>
-        <p class="muted">下面混合了常見教法與比較能解釋例句的規則。直接點擊規則卡片來選取，再按確認答案。再點一次可取消選取。</p>
+        <p class="muted">下面混合了對假設語氣常見的迷思及正確的規則。請直接點擊選取你曾經學過的規則卡片，再按確認答案。若不記得或沒學過，請選取你認為正確的規則卡片。再點一次可取消選取。</p>
         <div class="grid-4" id="mythOptionsWrap">
           <article class="card myth-card myth-option" data-id="A" role="button" tabindex="0">
             <h3>規則 A</h3>
-            <p>可能發生的假設，一定用現在式。</p>
+            <p>可能發生的假設，用現在式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="B" role="button" tabindex="0">
             <h3>規則 B</h3>
-            <p>不可能或較不真實的情況，才會用過去式。</p>
+            <p>不可能或較不真實的情況，用過去式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="C" role="button" tabindex="0">
             <h3>規則 C</h3>
-            <p>與現在事實相反的假設，一定要用完成式。</p>
+            <p>與現在事實相反的假設，用完成式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="D1" role="button" tabindex="0">
-            <h3>規則 D-1</h3>
-            <p>用 <strong>simple</strong> 常是在描述規則，或是在談意願、選擇、承諾這類條件。</p>
+            <h3>規則 D</h3>
+            <p>描述規則，或是在談意願、選擇、承諾這類條件，用現在式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="D2" role="button" tabindex="0">
-            <h3>規則 D-2</h3>
-            <p>用 <strong>past</strong> 常是在描述假想情境，不一定是在說過去時間。</p>
+            <h3>規則 E</h3>
+            <p>描述假想情境，用過去式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="D3" role="button" tabindex="0">
-            <h3>規則 D-3</h3>
-            <p>用 <strong>perfect</strong> 常是在表達對過去的假想，也就是去想一個不同於現實的較早行動與後果。</p>
+            <h3>規則 F</h3>
+            <p>表達對過去行為及其後果的假想，用完成式。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="D3" role="button" tabindex="0">
+            <h3>規則 G</h3>
+            <p>表達對未來的假設，用現在式代替未來式。</p>
           </article>
         </div>
         <div class="btn-row" style="margin-top:16px;">
@@ -736,45 +734,52 @@
     const mythData = {
       A: {
         correct: false,
-        title: '規則 A',
-        claim: '可能發生的假設，一定用現在式。',
+        title: '規則 A (錯誤)',
+        claim: '可能發生的假設，用現在式。',
         breaker: 'If I ever won a million dollars in my life, I would buy a sports car.',
-        note: '這件事仍可能發生，但句子用了 won，不是現在式。'
+        note: '這件事仍可能發生(無論發生機率多低，仍可能)，但句子用了 won，不是現在式win。'
       },
       B: {
         correct: false,
-        title: '規則 B',
-        claim: '不可能或較不真實的情況，才會用過去式。',
+        title: '規則 B (錯誤)',
+        claim: '不可能或較不真實的情況，用過去式。',
         breaker: 'If I gave you the job, how much salary would you ask for?',
-        note: '面試情境裡，給你工作仍是可能發生的，但句子仍用了 gave。'
+        note: '在面試過程中，很多面試官會問面試者這句話，以確保彼此的期待能夠符合。在這個情境中「如果給你這份工作...」的假設情境絕對是可能發生的(畢竟如果不可能/不打算給你這份工作，那就不用問了)，但句子仍用了過去式gave。 若這條規則為真，代表面試官在問這句話的同時，心裡就已經認定「我不打算給你這份工作了」，但實際上並非如此。這句話的主要用途是討論期待等，並不是在說一個不太可能發生的情境。'
       },
       C: {
         correct: false,
-        title: '規則 C',
-        claim: '與現在事實相反的假設，一定要用完成式。',
-        breaker: 'If I wanted you dead, you wouldn’t be breathing now.',
-        note: '這是與現在事實相反的想像，但並沒有使用完成式。'
+        title: '規則 C (錯誤)',
+        claim: '與現在事實相反的假設，用完成式。',
+        breaker: 'If I wanted to kill you, you wouldn’t be breathing.',
+        note: '這句話經常出現在電影情節當中，目的是在表達「我沒有要殺你」(從你還在呼吸這件事可推論)，這是與現在事實相反的想像(事實:我沒有想要殺你)，但並沒有使用完成式。'
       },
       D1: {
         correct: true,
-        title: '規則 D-1',
-        claim: '用 simple 常是在描述規則，或是在談意願、選擇、承諾這類條件。',
-        breaker: 'When it rains, the ground gets wet. / When you agree, I will send the form tonight.',
-        note: '這些句子都不是在比可能性高低，而是在看用途：規則、條件成立後的回應、選擇與承諾。'
+        title: '規則 D (正確)',
+        claim: '描述規則，或是在談意願、選擇、承諾這類條件，用現在式。',
+        breaker: 'If it rains, the ground gets wet. / If you agree, I will send the form tonight.',
+        note: '這些句子使用什麼時態都不是依據可能性，而是取決於用途：第一句是說明世界運作的規則(規律)、第二句則是條件成立後的回應、選擇或承諾。'
       },
       D2: {
         correct: true,
-        title: '規則 D-2',
-        claim: '用 past 常是在描述假想情境，不一定是在說過去時間。',
-        breaker: 'If I won three million dollars, I would buy a sports car.',
-        note: '這裡的 won 看起來像過去式，但它主要是在拉開心理距離，表達想像。'
+        title: '規則 E (正確)',
+        claim: '描述假想情境，用過去式。',
+        breaker: 'If I gave you the job, how much salary would you ask for?',
+        note: '這裡使用過去式gave，表達這是一個想像、一種假想的情境。這不是在描述一個世界運作的規則，更不是在要求對方做出承諾或闡述一定會做出的要求，而是單純敘述一種假想錄取的情境下，對方可能會想要多少錢。使用過去式可以表達這只是一種假設性的討論，這個討論不會、也不能做為未來任何要求或兌現承諾的依據'
       },
       D3: {
         correct: true,
-        title: '規則 D-3',
-        claim: '用 perfect 常是在表達對過去的假想，也就是去想一個不同於現實的較早行動與後果。',
-        breaker: 'If I had won three million dollars, I would have bought a sports car.',
-        note: '這裡的完成式不是因為「不真實就必須完成」，而是因為說話者在假想一個較早事件及其後續影響。'
+        title: '規則 F (正確)',
+        claim: '表達對過去行為及其後果的假想，用完成式。',
+        breaker: 'If I had studied harder, I would have passed the test.',
+        note: '這裡的完成式是因為說話者在假想(基於規則E，用過去式)一個較早事件及其後續影響(完成式著重描述一個行為或事件所造成的結果或影響)。'
+      },
+      G: {
+        correct: false,
+        title: '規則 G (錯誤)',
+        claim: '表達對未來的假設，用現在式代替未來式。',
+        breaker: 'If he will help you tomorrow, we will also come and help.',
+        note: '這裡表達對未來的假設，並沒有使用現在式代替未來式。最主要的原因是因為英文根本沒有未來式的存在(時態的定義為動詞的型態改變，英文在描述未來事件時，並沒有改寫動詞的型態)，僅有現在對未來的看法及意願(以will, should, can, may等字作修飾肯定的程度或意願)。在這裡will表達的並不是一定會，而是一種意願，所以在這裡必須加上will來表達這個意願，而不是直接用現在式helps來表達未來的假設。若改成If he helps you tomorrow, we will also come and help. 就會變成在說我們只有在他確實有來幫助你的時候，我們才會來。也因此這句話若移除will，會導致「我們也願意來(幫忙)」的觸發條件從「他有幫忙的意願」變成「他真的有幫忙這件事發生了」，兩者的差異相當大。'
       }
     };
 
@@ -804,11 +809,11 @@
       const correctOnly = mythSelections.size === correctSet.length && correctSet.every(id => mythSelections.has(id));
 
       mythFeedback.textContent = correctOnly
-        ? '答對了。比較能解釋例句的是 D-1、D-2、D-3。A、B、C 都會被真實語料中的例句打破。'
-        : '再看一次。A、B、C 都太依賴傳統分類，D-1、D-2、D-3 才比較能分別說明 simple、past、perfect 的用途。';
+        ? '答對了! 恭喜你/妳沒有落入常見的迷思當中。A、B、C、G 都會被真實對話中的範例打破。'
+        : '如果你選擇的選項包含規則A、B、C、G其中任何一項，你可能也和多數學生一樣，被文法書過度簡化的規則誤導了。仔細觀察以下真實對話範例，會發現它們分別打破了A、B、C、G 四個規則。';
       mythFeedback.className = `feedback show ${correctOnly ? 'good' : 'bad'}`;
 
-      mythResults.innerHTML = ['A', 'B', 'C', 'D1', 'D2', 'D3'].map(id => {
+      mythResults.innerHTML = ['A', 'B', 'C', 'G', 'D1', 'D2', 'D3'].map(id => {
         const item = mythData[id];
         const chosen = mythSelections.has(id);
         const klass = item.correct ? 'correct' : 'incorrect';
