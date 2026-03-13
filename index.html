@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>If 假設句型｜互動網頁初稿</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --panel-2: #f0f3ff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #d9deea;
+      --primary: #4f46e5;
+      --primary-2: #eef2ff;
+      --good: #047857;
+      --good-bg: #ecfdf5;
+      --bad: #b91c1c;
+      --bad-bg: #fef2f2;
+      --shadow: 0 14px 35px rgba(31, 41, 55, 0.08);
+      --radius: 20px;
+      --sidebar-w: 280px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans TC", system-ui, sans-serif;
+      background: linear-gradient(180deg, #f8f9ff 0%, #f4f6fb 100%);
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      margin: 0 0 8px;
+    }
+
+    .brand p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .nav {
+      display: grid;
+      gap: 10px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      transition: 0.2s ease;
+      display: block;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      border-color: var(--primary);
+      background: var(--primary-2);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .main {
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      scroll-margin-top: 18px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #eef2ff 0%, #ffffff 60%, #f8faff 100%);
+      display: grid;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+    }
+
+    h2 { font-size: 1.6rem; margin-bottom: 12px; }
+    h3 { font-size: 1.1rem; margin-bottom: 10px; }
+
+    p {
+      line-height: 1.75;
+      margin: 0 0 12px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+    }
+
+    .grid-2, .grid-4 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .card {
+      background: #fcfcff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card strong { color: var(--primary); }
+
+    .sentence-box {
+      background: #fafbff;
+      border: 1px dashed #b9c2dd;
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .btn-row,
+    .option-list,
+    .nav-row,
+    .selection-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .selection-group {
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font: inherit;
+      transition: 0.2s ease;
+    }
+
+    button:hover,
+    button:focus-visible {
+      border-color: var(--primary);
+      background: var(--primary-2);
+      outline: none;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      filter: brightness(1.05);
+      background: var(--primary);
+    }
+
+    .option {
+      min-width: 140px;
+      text-align: left;
+    }
+
+    .selected {
+      border-color: var(--primary) !important;
+      background: var(--primary-2) !important;
+      box-shadow: inset 0 0 0 1px rgba(79, 70, 229, 0.12);
+    }
+
+    .feedback {
+      margin-top: 12px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: none;
+      line-height: 1.7;
+    }
+
+    .feedback.show { display: block; }
+
+    .feedback.good {
+      background: var(--good-bg);
+      color: var(--good);
+      border: 1px solid #a7f3d0;
+    }
+
+    .feedback.bad {
+      background: var(--bad-bg);
+      color: var(--bad);
+      border: 1px solid #fecaca;
+    }
+
+    .output {
+      background: var(--panel-2);
+      border: 1px solid #c7d2fe;
+      border-radius: 16px;
+      padding: 18px;
+      line-height: 1.8;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    th {
+      background: #f7f8fd;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .hide { display: none !important; }
+
+    .detective-shell {
+      overflow: hidden;
+      transition: max-height 0.75s ease;
+      max-height: 540px;
+    }
+
+    .detective-shell.expanded {
+      max-height: 1100px;
+    }
+
+    .connection-card {
+      margin-top: 18px;
+      overflow: hidden;
+      width: 0;
+      opacity: 0;
+      transform: translateX(-24px);
+      transition: width 0.7s ease, opacity 0.45s ease, transform 0.7s ease;
+      white-space: normal;
+    }
+
+    .connection-card.show {
+      width: 100%;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .connection-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .myth-result-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .result-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fcfcff;
+    }
+
+    .result-item.correct {
+      border-color: #a7f3d0;
+      background: #f3fff9;
+    }
+
+    .result-item.incorrect {
+      border-color: #fecaca;
+      background: #fff7f7;
+    }
+
+    .myth-card {
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .rule-board {
+      display: grid;
+      gap: 16px;
+    }
+
+    .scenario-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background: #fcfcff;
+    }
+
+    .compare-strip {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .vs {
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      background: white;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .grid-2,
+      .grid-4,
+      .compare-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      table {
+        min-width: 540px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>If 假設句型｜互動初稿</h1>
+        <p>這個版本把原本投影片的核心邏輯改成更適合學生做選擇、驗證、比較與整理的流程。</p>
+      </div>
+      <nav class="nav">
+        <a href="#hero">0. 首頁</a>
+        <a href="#myths">1. 打破迷思</a>
+        <a href="#detective">2. 句子偵探</a>
+        <a href="#discovery">3. 規則探索</a>
+        <a href="#builder">4. 句型建構器</a>
+        <a href="#map">5. 總整理地圖</a>
+        <a href="#quiz">6. 小測驗</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section id="hero" class="section hero">
+        <div class="eyebrow">Interactive Draft</div>
+        <h2>重新理解 If 假設句型</h2>
+        <p>這份版本不是直接把投影片搬上網頁，而是把內容改造成一條更適合學生自己觀察規律的學習路線：先挑規則、再被例句打破、再從用途與時間的角度慢慢重建理解。</p>
+        <div class="chips">
+          <div class="chip">先判斷哪個規則可信</div>
+          <div class="chip">再觀察句子用途</div>
+          <div class="chip">再釐清時態能不能區分</div>
+          <div class="chip">最後整理成系統</div>
+        </div>
+      </section>
+
+      <section id="myths" class="section">
+        <h2>1. 打破常見迷思</h2>
+        <p class="muted">下面混合了常見教法與比較能解釋例句的規則。直接點擊規則卡片來選取，再按確認答案。再點一次可取消選取。</p>
+        <div class="grid-4" id="mythOptionsWrap">
+          <article class="card myth-card myth-option" data-id="A" role="button" tabindex="0">
+            <h3>規則 A</h3>
+            <p>可能發生的假設，一定用現在式。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="B" role="button" tabindex="0">
+            <h3>規則 B</h3>
+            <p>不可能或較不真實的情況，才會用過去式。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="C" role="button" tabindex="0">
+            <h3>規則 C</h3>
+            <p>與現在事實相反的假設，一定要用完成式。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="D1" role="button" tabindex="0">
+            <h3>規則 D-1</h3>
+            <p>用 <strong>simple</strong> 常是在描述規則，或是在談意願、選擇、承諾這類條件。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="D2" role="button" tabindex="0">
+            <h3>規則 D-2</h3>
+            <p>用 <strong>past</strong> 常是在描述假想情境，不一定是在說過去時間。</p>
+          </article>
+          <article class="card myth-card myth-option" data-id="D3" role="button" tabindex="0">
+            <h3>規則 D-3</h3>
+            <p>用 <strong>perfect</strong> 常是在表達對過去的假想，也就是去想一個不同於現實的較早行動與後果。</p>
+          </article>
+        </div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="checkMyths" class="btn-primary">確認答案</button>
+          <button id="resetMyths">重選</button>
+        </div>
+        <div id="mythFeedback" class="feedback"></div>
+        <div id="mythResults" class="myth-result-list hide"></div>
+      </section>
+
+      <section id="detective" class="section">
+        <div id="detectiveShell" class="detective-shell">
+          <h2>2. 句子偵探：先看用途，再看時態</h2>
+          <p>每一題要同時判斷兩件事：這句主要是在做什麼，以及 when 子句使用的是哪一種時態。答對後，確認答案按鈕會變成下一題按鈕。</p>
+          <div class="card">
+            <div class="sentence-box" id="detectiveSentence">When it rains, the ground gets wet.</div>
+            <div>
+              <h3>這句的主要用途</h3>
+              <div class="selection-group" id="purposeOptions">
+                <button class="option purpose-option" data-answer="fact">描述事實 / 規則</button>
+                <button class="option purpose-option" data-answer="choice">描述意願 / 選擇</button>
+                <button class="option purpose-option" data-answer="imagine">討論假想情境</button>
+              </div>
+            </div>
+            <div>
+              <h3>when 子句使用的時態</h3>
+              <div class="selection-group" id="tenseOptions">
+                <button class="option tense-option" data-answer="present">現在</button>
+                <button class="option tense-option" data-answer="past">過去</button>
+              </div>
+            </div>
+            <div id="detectiveFeedback" class="feedback"></div>
+            <div class="nav-row" style="margin-top:14px; justify-content:space-between;">
+              <button id="prevDetective" class="hide">&lt;</button>
+              <button id="checkDetective" class="btn-primary">確認答案</button>
+              <button id="nextDetective" class="hide">下一題 &gt;</button>
+            </div>
+          </div>
+
+          <div id="detectiveConnection" class="card connection-card">
+            <h3>連接整理：用途 vs 時態</h3>
+            <p class="muted">你已完成所有題目。現在請為每一種用途選擇你認為最穩定對應的時態，再按檢查規則正確性。</p>
+            <div class="connection-grid">
+              <div class="table-wrap" style="border:none; background:transparent;">
+                <table style="min-width:0;">
+                  <thead>
+                    <tr>
+                      <th>用途</th>
+                      <th>你選的時態</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>描述事實 / 規則</td>
+                      <td>
+                        <select class="connection-select" data-purpose="fact">
+                          <option value="">請選擇</option>
+                          <option value="present">現在</option>
+                          <option value="past">過去</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>描述意願 / 選擇</td>
+                      <td>
+                        <select class="connection-select" data-purpose="choice">
+                          <option value="">請選擇</option>
+                          <option value="present">現在</option>
+                          <option value="past">過去</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>討論假想情境</td>
+                      <td>
+                        <select class="connection-select" data-purpose="imagine">
+                          <option value="">請選擇</option>
+                          <option value="present">現在</option>
+                          <option value="past">過去</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="btn-row" style="margin-top:16px;">
+              <button id="checkConnectionRules" class="btn-primary">檢查規則正確性</button>
+            </div>
+            <div class="output" id="connectionOutput" style="margin-top:16px;">
+              請先為三種用途各選一個時態，再按檢查規則正確性。
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="discovery" class="section">
+        <h2>3. 規則探索：為什麼想像過去要用完成式？</h2>
+        <p class="muted">先比較兩種想像：想像未來、想像如果過去已經發生了另一種結果。兩句都可能看起來有 past 的感覺，所以光靠 past 還不夠。</p>
+        <div class="rule-board">
+          <div class="compare-strip">
+            <article class="scenario-card">
+              <h3>情境 1：想像未來</h3>
+              <p>你還沒抽獎，但你在想像之後真的中獎。</p>
+              <div class="sentence-box">If I won three million dollars, I would buy a sports car.</div>
+              <p class="muted">這裡用了 past form，但說話者在想像的不是過去，而是一個非現實、被拉開距離的情境。</p>
+            </article>
+            <div class="vs">VS</div>
+            <article class="scenario-card">
+              <h3>情境 2：想像過去</h3>
+              <p>你回頭想像：如果昨天其實已經中了三百萬，現在很多結果都會不同。</p>
+              <div class="sentence-box">If I had won three million dollars, I would have bought a sports car.</div>
+              <p class="muted">這裡不是單純回想，而是在假設一個沒有真的發生過的較早事件，並把焦點放到後來本來會出現的結果。</p>
+            </article>
+          </div>
+
+          <div class="card">
+            <h3>問題 1</h3>
+            <p>只靠「動詞往過去移」這件事，能不能把上面兩種想像完全分開？</p>
+            <div class="selection-group">
+              <button class="option rule-option" data-q="q1" data-answer="yes">可以</button>
+              <button class="option rule-option" data-q="q1" data-answer="no">不行</button>
+            </div>
+            <div id="ruleFeedback1" class="feedback"></div>
+          </div>
+
+          <div class="card">
+            <h3>問題 2</h3>
+            <p>那為什麼想像過去常會出現 <strong>had + p.p.</strong>？</p>
+            <div class="selection-group">
+              <button class="option rule-option" data-q="q2" data-answer="A">因為只要事情不真實，就一律用完成式</button>
+              <button class="option rule-option" data-q="q2" data-answer="B">因為想像過去時，說話者常在回看一個較早的行動，並強調它本來會帶來不同的後果</button>
+              <button class="option rule-option" data-q="q2" data-answer="C">因為 completed actions 都一定要用完成式</button>
+            </div>
+            <div id="ruleFeedback2" class="feedback"></div>
+          </div>
+
+          <div class="output">
+            <strong>整理：</strong><br>
+            1. 討論假想情境時，英文常先把形式往過去移，做出距離感。<br>
+            2. 但如果要明確表示「想像的是過去的另一種走向」，光靠過去式不夠。<br>
+            3. 這時會進一步用完成式，把焦點放在一個更早的行動，以及它後來本來可能造成的不同結果。<br>
+            4. 所以它不只是「過去」，而是「較早的動作 + 後來結果本可不同」這種 framing，剛好和 perfect 的視角有重疊。
+          </div>
+        </div>
+      </section>
+
+      <section id="builder" class="section">
+        <h2>4. 句型建構器</h2>
+        <p>讓學生自己選條件，系統產生一個基本骨架，幫助他們把規則和用途連起來。</p>
+        <div class="card">
+          <div class="grid-2">
+            <div>
+              <label for="purposeSelect"><strong>句子的用途</strong></label>
+              <select id="purposeSelect">
+                <option value="fact">描述事實 / 規則</option>
+                <option value="choice">描述意願 / 選擇 / 承諾</option>
+                <option value="imagine-present">討論對現在 / 未來的想像</option>
+                <option value="imagine-past">討論對過去的想像</option>
+              </select>
+            </div>
+            <div>
+              <label for="subjectSelect"><strong>主詞</strong></label>
+              <select id="subjectSelect">
+                <option value="I">I</option>
+                <option value="you">you</option>
+                <option value="he">he</option>
+                <option value="she">she</option>
+                <option value="they">they</option>
+              </select>
+            </div>
+          </div>
+          <div class="output" id="builderOutput" style="margin-top:14px;"></div>
+          <p class="footer-note">目前先提供示範骨架。之後可升級成讓學生拖拉動詞、時間詞與情境卡片來組句。</p>
+        </div>
+      </section>
+
+      <section id="map" class="section">
+        <h2>5. If 句型總整理地圖</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>目的</th>
+                <th>內容類型</th>
+                <th>可替代字</th>
+                <th>理解重點</th>
+                <th>be 動詞</th>
+                <th>時態重點</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>邏輯、規則</td>
+                <td>事實</td>
+                <td>when</td>
+                <td>描述常態與規則</td>
+                <td>is / am / are</td>
+                <td>現在式</td>
+              </tr>
+              <tr>
+                <td>意願、選擇、承諾</td>
+                <td>未定但可選</td>
+                <td>should</td>
+                <td>看選擇、承諾、後續結果</td>
+                <td>is / am / are / be</td>
+                <td>常見現在式 + will / may / can</td>
+              </tr>
+              <tr>
+                <td>討論假想情境</td>
+                <td>想像</td>
+                <td>had</td>
+                <td>形式先往過去移；想像過去再用完成式把較早行動與後果連起來</td>
+                <td>were</td>
+                <td>現在 / 未來想像 → 過去式；過去想像 → 過去完成式</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="quiz" class="section">
+        <h2>6. 小測驗</h2>
+        <p>先做一題概念題，確認學生是否抓到核心邏輯。</p>
+        <div class="card">
+          <div class="sentence-box">If I had studied harder last night, I would have passed the test this morning.</div>
+          <div class="option-list">
+            <button class="quiz-option" data-correct="false">這是在描述固定規則</button>
+            <button class="quiz-option" data-correct="true">這是在想像過去，所以用了完成式來框出較早的行動與後來結果</button>
+            <button class="quiz-option" data-correct="false">這是因為事情不可能，所以一律用完成式</button>
+          </div>
+          <div id="quizFeedback" class="feedback"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const mythSelections = new Set();
+    const mythOptions = document.querySelectorAll('.myth-option');
+    const checkMyths = document.getElementById('checkMyths');
+    const resetMyths = document.getElementById('resetMyths');
+    const mythFeedback = document.getElementById('mythFeedback');
+    const mythResults = document.getElementById('mythResults');
+
+    const mythData = {
+      A: {
+        correct: false,
+        title: '規則 A',
+        claim: '可能發生的假設，一定用現在式。',
+        breaker: 'If I ever won a million dollars in my life, I would buy a sports car.',
+        note: '這件事仍可能發生，但句子用了 won，不是現在式。'
+      },
+      B: {
+        correct: false,
+        title: '規則 B',
+        claim: '不可能或較不真實的情況，才會用過去式。',
+        breaker: 'If I gave you the job, how much salary would you ask for?',
+        note: '面試情境裡，給你工作仍是可能發生的，但句子仍用了 gave。'
+      },
+      C: {
+        correct: false,
+        title: '規則 C',
+        claim: '與現在事實相反的假設，一定要用完成式。',
+        breaker: 'If I wanted you dead, you wouldn’t be breathing now.',
+        note: '這是與現在事實相反的想像，但並沒有使用完成式。'
+      },
+      D1: {
+        correct: true,
+        title: '規則 D-1',
+        claim: '用 simple 常是在描述規則，或是在談意願、選擇、承諾這類條件。',
+        breaker: 'When it rains, the ground gets wet. / When you agree, I will send the form tonight.',
+        note: '這些句子都不是在比可能性高低，而是在看用途：規則、條件成立後的回應、選擇與承諾。'
+      },
+      D2: {
+        correct: true,
+        title: '規則 D-2',
+        claim: '用 past 常是在描述假想情境，不一定是在說過去時間。',
+        breaker: 'If I won three million dollars, I would buy a sports car.',
+        note: '這裡的 won 看起來像過去式，但它主要是在拉開心理距離，表達想像。'
+      },
+      D3: {
+        correct: true,
+        title: '規則 D-3',
+        claim: '用 perfect 常是在表達對過去的假想，也就是去想一個不同於現實的較早行動與後果。',
+        breaker: 'If I had won three million dollars, I would have bought a sports car.',
+        note: '這裡的完成式不是因為「不真實就必須完成」，而是因為說話者在假想一個較早事件及其後續影響。'
+      }
+    };
+
+    mythOptions.forEach(card => {
+      const toggleCard = () => {
+        const id = card.dataset.id;
+        if (mythSelections.has(id)) {
+          mythSelections.delete(id);
+          card.classList.remove('selected');
+        } else {
+          mythSelections.add(id);
+          card.classList.add('selected');
+        }
+      };
+
+      card.addEventListener('click', toggleCard);
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleCard();
+        }
+      });
+    });
+
+    checkMyths.addEventListener('click', () => {
+      const correctSet = ['D1', 'D2', 'D3'];
+      const correctOnly = mythSelections.size === correctSet.length && correctSet.every(id => mythSelections.has(id));
+
+      mythFeedback.textContent = correctOnly
+        ? '答對了。比較能解釋例句的是 D-1、D-2、D-3。A、B、C 都會被真實語料中的例句打破。'
+        : '再看一次。A、B、C 都太依賴傳統分類，D-1、D-2、D-3 才比較能分別說明 simple、past、perfect 的用途。';
+      mythFeedback.className = `feedback show ${correctOnly ? 'good' : 'bad'}`;
+
+      mythResults.innerHTML = ['A', 'B', 'C', 'D1', 'D2', 'D3'].map(id => {
+        const item = mythData[id];
+        const chosen = mythSelections.has(id);
+        const klass = item.correct ? 'correct' : 'incorrect';
+        return `
+          <div class="result-item ${klass}">
+            <strong>${item.title}</strong>${chosen ? '（你有選）' : ''}<br>
+            ${item.claim}<br><br>
+            <div class="sentence-box">${item.breaker}</div>
+            <span class="muted">${item.note}</span>
+          </div>
+        `;
+      }).join('');
+
+      mythResults.classList.remove('hide');
+    });
+
+    resetMyths.addEventListener('click', () => {
+      mythSelections.clear();
+      mythOptions.forEach(card => card.classList.remove('selected'));
+      mythFeedback.className = 'feedback';
+      mythFeedback.textContent = '';
+      mythResults.classList.add('hide');
+      mythResults.innerHTML = '';
+    });
+
+    const detectiveData = [
+      { sentence: 'When it rains, the ground gets wet.', purpose: 'fact', tense: 'present', explanation: '這句是在描述規則，when 子句用的是現在式。' },
+      { sentence: 'When you heat ice, it melts.', purpose: 'fact', tense: 'present', explanation: '這句是在說一般規律，重點是事實 / 規則，when 子句用現在式。' },
+      { sentence: 'When people do not sleep enough, they feel tired.', purpose: 'fact', tense: 'present', explanation: '這句描述一般情況，屬於事實 / 規則，用現在式。' },
+      { sentence: 'When students practice regularly, they improve faster.', purpose: 'fact', tense: 'present', explanation: '這句是在說常態規律，因此是事實 / 規則，加上現在式。' },
+      { sentence: 'When water reaches 100°C, it boils.', purpose: 'fact', tense: 'present', explanation: '這句描述科學規則，when 子句是現在式。' },
+      { sentence: 'When you agree, I will send the form tonight.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的承諾與回應，when 子句是現在式。' },
+      { sentence: 'When you need extra time, I can wait.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的回應或承諾，when 子句是現在式。' },
+      { sentence: 'When you want, we can start tomorrow.', purpose: 'choice', tense: 'present', explanation: '這句是在給對方選擇，因此歸在選擇 / 意願，when 子句用現在式。' },
+      { sentence: 'When you choose to join us, we will save you a seat.', purpose: 'choice', tense: 'present', explanation: '這句核心是在談選擇與其後果，when 子句是現在式。' },
+      { sentence: 'When you accept the plan, I will help you.', purpose: 'choice', tense: 'present', explanation: '這句是在談接受與承諾之後的結果，when 子句用現在式。' },
+      { sentence: 'When I won three million dollars, I would buy a sports car.', purpose: 'imagine', tense: 'past', explanation: '這裡故意用 when 來讓你觀察：形式上是 past，功能上是在做假想情境。' },
+      { sentence: 'When she were taller, she could reach the shelf.', purpose: 'imagine', tense: 'past', explanation: '這裡的重點是觀察假想情境如何把形式往過去移。' },
+      { sentence: 'When he had more time, he would learn Japanese.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像不同於現況的條件，形式上往過去移。' },
+      { sentence: 'When they lived closer, we would visit them more often.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像與現況不同的條件，因此子句用過去式。' },
+      { sentence: 'When I gave you the job, how much salary would you ask for?', purpose: 'imagine', tense: 'past', explanation: '這句是模擬與假設情境，因此歸在想像，形式上是過去式。' }
+    ];
+
+    const detectiveSentence = document.getElementById('detectiveSentence');
+    const detectiveFeedback = document.getElementById('detectiveFeedback');
+    const purposeButtons = document.querySelectorAll('.purpose-option');
+    const tenseButtons = document.querySelectorAll('.tense-option');
+    const prevDetective = document.getElementById('prevDetective');
+    const nextDetective = document.getElementById('nextDetective');
+    const checkDetective = document.getElementById('checkDetective');
+    const detectiveShell = document.getElementById('detectiveShell');
+    const detectiveConnection = document.getElementById('detectiveConnection');
+    const connectionOutput = document.getElementById('connectionOutput');
+    const checkConnectionRules = document.getElementById('checkConnectionRules');
+    const connectionSelects = document.querySelectorAll('.connection-select');
+
+    let detectiveIndex = 0;
+    let selectedPurpose = null;
+    let selectedTense = null;
+    const solvedIndices = new Set();
+
+    function setButtonSelection(buttons, selectedValue) {
+      buttons.forEach(button => {
+        button.classList.toggle('selected', button.dataset.answer === selectedValue);
+      });
+    }
+
+    function updateDetectiveControls() {
+      const allSolved = solvedIndices.size === detectiveData.length;
+      const currentSolved = solvedIndices.has(detectiveIndex);
+
+      if (allSolved) {
+        checkDetective.classList.add('hide');
+        prevDetective.classList.remove('hide');
+        nextDetective.classList.remove('hide');
+        prevDetective.disabled = detectiveIndex === 0;
+        nextDetective.disabled = detectiveIndex === detectiveData.length - 1;
+        return;
+      }
+
+      prevDetective.classList.add('hide');
+      prevDetective.disabled = true;
+
+      if (currentSolved) {
+        checkDetective.classList.add('hide');
+        nextDetective.classList.remove('hide');
+        nextDetective.disabled = detectiveIndex === detectiveData.length - 1;
+      } else {
+        checkDetective.classList.remove('hide');
+        nextDetective.classList.add('hide');
+        nextDetective.disabled = true;
+      }
+    }
+
+    function renderDetective(showSolvedState = false) {
+      const item = detectiveData[detectiveIndex];
+      detectiveSentence.textContent = item.sentence;
+
+      if (showSolvedState && solvedIndices.has(detectiveIndex)) {
+        selectedPurpose = item.purpose;
+        selectedTense = item.tense;
+        setButtonSelection(purposeButtons, selectedPurpose);
+        setButtonSelection(tenseButtons, selectedTense);
+        detectiveFeedback.textContent = `答對了。${item.explanation}`;
+        detectiveFeedback.className = 'feedback show good';
+      } else {
+        selectedPurpose = null;
+        selectedTense = null;
+        setButtonSelection(purposeButtons, null);
+        setButtonSelection(tenseButtons, null);
+        detectiveFeedback.textContent = '';
+        detectiveFeedback.className = 'feedback';
+      }
+
+      updateDetectiveControls();
+    }
+
+    function revealDetectiveConnection() {
+      detectiveShell.classList.add('expanded');
+      detectiveConnection.classList.add('show');
+      renderDetective(true);
+    }
+
+    purposeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        selectedPurpose = button.dataset.answer;
+        setButtonSelection(purposeButtons, selectedPurpose);
+      });
+    });
+
+    tenseButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        selectedTense = button.dataset.answer;
+        setButtonSelection(tenseButtons, selectedTense);
+      });
+    });
+
+    checkDetective.addEventListener('click', () => {
+      const item = detectiveData[detectiveIndex];
+
+      if (!selectedPurpose || !selectedTense) {
+        detectiveFeedback.textContent = '請先各選一個答案：用途一個、時態一個。';
+        detectiveFeedback.className = 'feedback show bad';
+        return;
+      }
+
+      const correct = selectedPurpose === item.purpose && selectedTense === item.tense;
+      detectiveFeedback.textContent = correct ? `答對了。${item.explanation}` : `再想想。${item.explanation}`;
+      detectiveFeedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+
+      if (correct) {
+        solvedIndices.add(detectiveIndex);
+        if (solvedIndices.size === detectiveData.length) {
+          revealDetectiveConnection();
+        } else {
+          updateDetectiveControls();
+        }
+      }
+    });
+
+    nextDetective.addEventListener('click', () => {
+      if (detectiveIndex < detectiveData.length - 1) {
+        detectiveIndex += 1;
+        const allSolved = solvedIndices.size === detectiveData.length;
+        renderDetective(allSolved);
+      }
+    });
+
+    prevDetective.addEventListener('click', () => {
+      if (detectiveIndex > 0) {
+        detectiveIndex -= 1;
+        renderDetective(true);
+      }
+    });
+
+    checkConnectionRules.addEventListener('click', () => {
+      const values = {};
+      let incomplete = false;
+
+      connectionSelects.forEach(select => {
+        values[select.dataset.purpose] = select.value;
+        if (!select.value) incomplete = true;
+      });
+
+      if (incomplete) {
+        connectionOutput.textContent = '三種用途都要先選一個時態，才能檢查規則。';
+        return;
+      }
+
+      const ok = values.fact === 'present' && values.choice === 'present' && values.imagine === 'past';
+      connectionOutput.innerHTML = ok
+        ? '答對了。<strong>描述事實 / 規則</strong> 最穩定對應到現在；<strong>描述意願 / 選擇</strong> 也常用現在去描述條件成立；<strong>討論假想情境</strong> 則最穩定地把形式往過去移。'
+        : '再觀察一次。比較穩定的整理是：<strong>事實 / 規則 → 現在</strong>，<strong>意願 / 選擇 → 常見現在</strong>，<strong>假想情境 → 過去</strong>。重點是從用途出發，而不是只看可能性。';
+    });
+
+    const ruleButtons = document.querySelectorAll('.rule-option');
+    const ruleFeedback1 = document.getElementById('ruleFeedback1');
+    const ruleFeedback2 = document.getElementById('ruleFeedback2');
+
+    ruleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const questionId = button.dataset.q;
+        const answer = button.dataset.answer;
+        document.querySelectorAll(`.rule-option[data-q="${questionId}"]`).forEach(item => item.classList.remove('selected'));
+        button.classList.add('selected');
+
+        if (questionId === 'q1') {
+          const good = answer === 'no';
+          ruleFeedback1.textContent = good
+            ? '答對了。因為「想像未來」和「想像現在不同的情況」都可能先用 past form 來做距離感，所以只靠 past 還不夠分辨。'
+            : '不太對。因為想像未來或現在不同情況時，也常已經用了 past form，所以光靠這個還不夠。';
+          ruleFeedback1.className = `feedback show ${good ? 'good' : 'bad'}`;
+        } else {
+          const good = answer === 'B';
+          ruleFeedback2.textContent = good
+            ? '答對了。想像過去不是單純把時間往前放，而是把焦點放在一個更早的行動，並強調它本來會導致不同的後果，這和 perfect 的 framing 重疊。'
+            : '再想想。這裡不是「不真實就一律完成式」，而是因為說話者在回看一個更早的行動，並框出它後來本來可能造成的不同結果。';
+          ruleFeedback2.className = `feedback show ${good ? 'good' : 'bad'}`;
+        }
+      });
+    });
+
+    const purposeSelect = document.getElementById('purposeSelect');
+    const subjectSelect = document.getElementById('subjectSelect');
+    const builderOutput = document.getElementById('builderOutput');
+
+    function bePresent(subject) {
+      if (subject === 'I') return 'am';
+      if (subject === 'he' || subject === 'she') return 'is';
+      return 'are';
+    }
+
+    function pronounObject(subject) {
+      if (subject === 'I') return 'me';
+      if (subject === 'he') return 'him';
+      if (subject === 'she') return 'her';
+      if (subject === 'they') return 'them';
+      return 'you';
+    }
+
+    function renderBuilder() {
+      const purpose = purposeSelect.value;
+      const subject = subjectSelect.value;
+      let html = '';
+
+      if (purpose === 'fact') {
+        html = `<strong>描述事實 / 規則</strong><br>If ${subject} ${bePresent(subject)} late, the teacher gets angry.<br><span class="muted">重點：這裡是在說規則或常態，所以偏現在式。</span>`;
+      } else if (purpose === 'choice') {
+        html = `<strong>描述意願 / 選擇</strong><br>If ${subject} choose${subject === 'he' || subject === 'she' ? 's' : ''} to join us, we will help ${pronounObject(subject)}.<br><span class="muted">重點：這裡不是單純想像，而是在談選擇、承諾、後續結果。</span>`;
+      } else if (purpose === 'imagine-present') {
+        const beWord = subject === 'he' || subject === 'she' ? 'were' : 'were';
+        html = `<strong>討論對現在 / 未來的想像</strong><br>If ${subject} ${beWord} richer, ${subject} would travel more.<br><span class="muted">重點：對現在 / 未來的想像，形式常先往過去移。</span>`;
+      } else {
+        html = `<strong>討論對過去的想像</strong><br>If ${subject} had studied harder, ${subject} would have passed the test.<br><span class="muted">重點：對過去的想像會把較早的行動與後來結果連起來。</span>`;
+      }
+
+      builderOutput.innerHTML = html;
+    }
+
+    purposeSelect.addEventListener('change', renderBuilder);
+    subjectSelect.addEventListener('change', renderBuilder);
+
+    const quizOptions = document.querySelectorAll('.quiz-option');
+    const quizFeedback = document.getElementById('quizFeedback');
+
+    quizOptions.forEach(button => {
+      button.addEventListener('click', () => {
+        const correct = button.dataset.correct === 'true';
+        quizFeedback.textContent = correct
+          ? '答對了。這句的核心邏輯是：說話者在想像過去，所以用了完成式來框出較早的行動與後來結果。'
+          : '不太對。這句不能簡化成「不可能就用完成式」，重點應該放在它是在想像過去，而且在看一個早先行動本來會帶來的不同結果。';
+        quizFeedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+      });
+    });
+
+    renderDetective();
+    renderBuilder();
+  </script>
+</body>
+</html>
