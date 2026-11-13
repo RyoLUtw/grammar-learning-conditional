@@ -171,6 +171,21 @@
 
     .card strong { color: var(--primary); }
 
+    .sentence-builder select { width: auto; max-width: 100%; display: inline-block; margin: 4px 2px; }
+    #formExamples li { line-height: 1.8; margin-bottom: 12px; }
+
+    .context-box {
+      background: #f0f7fa;
+      border: 1px solid #cbdfe8;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    .context-box h3 { font-size: 0.95rem; margin-bottom: 8px; }
+    .context-box p { margin: 0; }
+    .context-box .context-translation { color: #526474; margin-top: 4px; }
+
     .sentence-box {
       background: #fafbff;
       border: 1px dashed #b9c2dd;
@@ -303,30 +318,13 @@
 
     .hide { display: none !important; }
 
-    .detective-shell {
-      overflow: hidden;
-      transition: max-height 0.75s ease;
-      max-height: 540px;
-    }
-
-    .detective-shell.expanded {
-      max-height: 1100px;
-    }
-
     .connection-card {
+      display: none;
       margin-top: 18px;
-      overflow: hidden;
-      width: 0;
-      opacity: 0;
-      transform: translateX(-24px);
-      transition: width 0.7s ease, opacity 0.45s ease, transform 0.7s ease;
-      white-space: normal;
     }
 
     .connection-card.show {
-      width: 100%;
-      opacity: 1;
-      transform: translateX(0);
+      display: block;
     }
 
     .connection-grid {
@@ -428,6 +426,11 @@
         min-width: 540px;
       }
     }
+    .help-button { border-radius: 50%; padding: 0; width: 30px; height: 30px; color: var(--primary); font-weight: 700; vertical-align: middle; }
+    dialog { width: min(680px, calc(100% - 32px)); max-height: 85vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 20px; padding: 24px; color: var(--text); box-shadow: var(--shadow); }
+    dialog::backdrop { background: rgba(15, 23, 42, .5); }
+    dialog article + article { margin-top: 14px; }
+    .quiz-stack { display: grid; gap: 18px; }
   </style>
 </head>
 <body>
@@ -477,11 +480,11 @@
           </article>
           <article class="card myth-card myth-option" data-id="D2" role="button" tabindex="0">
             <h3>規則 E</h3>
-            <p>描述假想情境，用過去式。</p>
+            <p>設想另一種現實，用過去式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="D3" role="button" tabindex="0">
             <h3>規則 F</h3>
-            <p>表達對過去行為及其後果的假想，用完成式。</p>
+            <p>表達對過去行為及其後果的設想，用完成式。</p>
           </article>
           <article class="card myth-card myth-option" data-id="D3" role="button" tabindex="0">
             <h3>規則 G</h3>
@@ -494,24 +497,32 @@
         </div>
         <div id="mythFeedback" class="feedback"></div>
         <div id="mythResults" class="myth-result-list hide"></div>
+
       </section>
 
       <section id="detective" class="section">
         <div id="detectiveShell" class="detective-shell">
           <h2>2. 句子偵探：先看用途，再看時態</h2>
-          <p>每一題要同時判斷兩件事：這句主要是在做什麼，以及 when 子句使用的是哪一種時態。答對後，確認答案按鈕會變成下一題按鈕。</p>
+          <p>每一題要同時判斷兩件事：這句主要是在做什麼，以及 if 子句使用的是哪一種時態。一般規律中，if 後會附上 (when)，表示此處也能用 when 表達「每當」；其他題目保留 if，避免把「如果」誤當成「當……時」。答對後，確認答案按鈕會變成下一題按鈕。</p>
           <div class="card">
-            <div class="sentence-box" id="detectiveSentence">When it rains, the ground gets wet.</div>
+            <aside class="context-box" aria-labelledby="detectiveContextTitle">
+              <h3 id="detectiveContextTitle">Context（情境）</h3>
+              <div id="detectiveContext" aria-live="polite">
+                <p lang="en" id="detectiveContextEnglish">A child asks why running in the rain is dangerous. You explain what usually happens.</p>
+                <p lang="zh-Hant" class="context-translation" id="detectiveContextChinese">（孩子問為什麼在雨中奔跑很危險。你解釋一般會發生的情況。）</p>
+              </div>
+            </aside>
+            <div class="sentence-box" id="detectiveSentence">If (when) it rains, the ground gets wet.</div>
             <div>
-              <h3>這句的主要用途</h3>
+              <h3>這句的主要用途 <button type="button" id="purposeHelp" class="help-button" aria-label="了解三種用途的差別" aria-haspopup="dialog" aria-controls="purposeDialog">?</button></h3>
               <div class="selection-group" id="purposeOptions">
                 <button class="option purpose-option" data-answer="fact">描述事實 / 規則</button>
                 <button class="option purpose-option" data-answer="choice">描述意願 / 選擇</button>
-                <button class="option purpose-option" data-answer="imagine">討論假想情境</button>
+                <button class="option purpose-option" data-answer="imagine">設想另一種現實</button>
               </div>
             </div>
             <div>
-              <h3>when 子句使用的時態</h3>
+              <h3>if 子句使用的時態</h3>
               <div class="selection-group" id="tenseOptions">
                 <button class="option tense-option" data-answer="present">現在</button>
                 <button class="option tense-option" data-answer="past">過去</button>
@@ -559,7 +570,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>討論假想情境</td>
+                      <td>設想另一種現實</td>
                       <td>
                         <select class="connection-select" data-purpose="imagine">
                           <option value="">請選擇</option>
@@ -584,36 +595,49 @@
 
       <section id="discovery" class="section">
         <h2>3. 規則探索：為什麼想像過去要用完成式？</h2>
-        <p class="muted">先比較兩種想像：想像未來、想像如果過去已經發生了另一種結果。兩句都可能看起來有 past 的感覺，所以光靠 past 還不夠。</p>
+        <p class="muted">用同一組條件與後續行動，分別描述對未來與過去的另一種設想。</p>
         <div class="rule-board">
-          <div class="compare-strip">
-            <article class="scenario-card">
-              <h3>情境 1：想像未來</h3>
-              <p>你還沒抽獎，但你在想像之後真的中獎。</p>
-              <div class="sentence-box">If I won three million dollars, I would buy a sports car.</div>
-              <p class="muted">這裡用了 past form，但說話者在想像的不是過去，而是一個非現實、被拉開距離的情境。</p>
-            </article>
-            <div class="vs">VS</div>
-            <article class="scenario-card">
-              <h3>情境 2：想像過去</h3>
-              <p>你回頭想像：如果昨天其實已經中了三百萬，現在很多結果都會不同。</p>
-              <div class="sentence-box">If I had won three million dollars, I would have bought a sports car.</div>
-              <p class="muted">這裡不是單純回想，而是在假設一個沒有真的發生過的較早事件，並把焦點放到後來本來會出現的結果。</p>
-            </article>
-          </div>
-
           <div class="card">
-            <h3>問題 1</h3>
-            <p>只靠「動詞往過去移」這件事，能不能把上面兩種想像完全分開？</p>
-            <div class="selection-group">
-              <button class="option rule-option" data-q="q1" data-answer="yes">可以</button>
-              <button class="option rule-option" data-q="q1" data-answer="no">不行</button>
+            <p><strong>Condition（條件）：</strong><span lang="en">win three million dollars</span>（中三百萬）<br><strong>Subsequent action（後續行動）：</strong><span lang="en">buy a sports car</span>（買一輛跑車）</p>
+            <h3>情境 A：設想未來</h3>
+            <p>你還沒參加明天的抽獎。先暫時設想另一種生活，並不是在作購車承諾。</p>
+            <div class="sentence-box sentence-builder" lang="en">If I <select id="futureCondition" aria-label="tomorrow: condition verb"><option value="">___</option><option>win</option><option>won</option><option>had won</option></select> three million dollars tomorrow, I <select id="futureAction" aria-label="tomorrow: subsequent action"><option value="">___</option><option>will buy</option><option>would buy</option><option>would have bought</option></select> a sports car.</div>
+            <h3>情境 B：設想過去</h3>
+            <p>你上個月沒有中獎，也沒有買跑車。回頭設想：如果那次中獎，後來本來會做什麼？</p>
+            <div class="sentence-box sentence-builder" lang="en">If I <select id="pastCondition" aria-label="last month: condition verb"><option value="">___</option><option>win</option><option>won</option><option>had won</option></select> three million dollars last month, I <select id="pastAction" aria-label="last month: subsequent action"><option value="">___</option><option>will buy</option><option>would buy</option><option>would have bought</option></select> a sports car.</div>
+            <button id="checkHypotheticalForms" class="btn-primary">確認句型</button>
+            <div id="hypotheticalFeedback" class="feedback" role="status"></div>
+          </div>
+          <div class="card hide" id="formExamples">
+            <h3>觀察更多例句，找出規律</h3>
+            <p>兩句都用 won / would buy 時，拿掉時間詞，會剩下完全相同的句子。tomorrow 和 last month 雖提供時間線索，動詞形式卻沒有清楚區分這兩種設想。觀察以下各五句，看看英文如何標示差別。</p>
+            <div class="grid-2">
+              <div><h3>設想未來</h3><ol lang="en">
+                <li>If I won a prize tomorrow, I would celebrate with my family.</li>
+                <li>If she moved here next year, we would see her more often.</li>
+                <li>If we left early tomorrow, we would catch the first train.</li>
+                <li>If he got the job next week, he would rent a flat nearby.</li>
+                <li>If they invited me next month, I would attend the party.</li>
+              </ol></div>
+              <div><h3>設想過去</h3><ol lang="en">
+                <li>If I had won a prize yesterday, I would have celebrated with my family.</li>
+                <li>If she had moved here last year, we would have seen her more often.</li>
+                <li>If we had left early yesterday, we would have caught the first train.</li>
+                <li>If he had got the job last week, he would have rented a flat nearby.</li>
+                <li>If they had invited me last month, I would have attended the party.</li>
+              </ol></div>
             </div>
-            <div id="ruleFeedback1" class="feedback"></div>
+            <h3>哪個整理最符合這十個例句？</h3>
+            <div class="selection-group" id="inductionOptions">
+              <button class="option induction-option" data-answer="A" aria-pressed="false">未來與過去的設想都只要用過去式，動詞形式完全相同。</button>
+              <button class="option induction-option" data-answer="B" aria-pressed="false">這些未來設想用 if + 過去式、would + 原形；過去設想用 if + had + p.p.、would have + p.p.。</button>
+              <button class="option induction-option" data-answer="C" aria-pressed="false">只要不是已發生的事，就用現在式和 will。</button>
+            </div>
+            <div id="inductionFeedback" class="feedback" role="status"></div>
           </div>
 
-          <div class="card">
-            <h3>問題 2</h3>
+          <div class="card hide" id="discoveryQuestion2">
+            <h3>進一步思考：為什麼用完成式？</h3>
             <p>那為什麼想像過去常會出現 <strong>had + p.p.</strong>？</p>
             <div class="selection-group">
               <button class="option rule-option" data-q="q2" data-answer="A">因為只要事情不真實，就一律用完成式</button>
@@ -623,9 +647,9 @@
             <div id="ruleFeedback2" class="feedback"></div>
           </div>
 
-          <div class="output">
+          <div class="output hide" id="discoverySummary">
             <strong>整理：</strong><br>
-            1. 討論假想情境時，英文常先把形式往過去移，做出距離感。<br>
+            1. 設想另一種現實時，英文常先把形式往過去移，做出距離感。<br>
             2. 但如果要明確表示「想像的是過去的另一種走向」，光靠過去式不夠。<br>
             3. 這時會進一步用完成式，把焦點放在一個更早的行動，以及它後來本來可能造成的不同結果。<br>
             4. 所以它不只是「過去」，而是「較早的動作 + 後來結果本可不同」這種 framing，剛好和 perfect 的視角有重疊。
@@ -695,7 +719,7 @@
                 <td>常見現在式 + will / may / can</td>
               </tr>
               <tr>
-                <td>討論假想情境</td>
+                <td>設想另一種現實</td>
                 <td>想像</td>
                 <td>had</td>
                 <td>形式先往過去移；想像過去再用完成式把較早行動與後果連起來</td>
@@ -709,20 +733,33 @@
 
       <section id="quiz" class="section">
         <h2>6. 小測驗</h2>
-        <p>先做一題概念題，確認學生是否抓到核心邏輯。</p>
-        <div class="card">
-          <div class="sentence-box">If I had studied harder last night, I would have passed the test this morning.</div>
-          <div class="option-list">
-            <button class="quiz-option" data-correct="false">這是在描述固定規則</button>
-            <button class="quiz-option" data-correct="true">這是在想像過去，所以用了完成式來框出較早的行動與後來結果</button>
-            <button class="quiz-option" data-correct="false">這是因為事情不可能，所以一律用完成式</button>
-          </div>
-          <div id="quizFeedback" class="feedback"></div>
+        <div class="selection-group" role="tablist" aria-label="練習類型">
+          <button id="receptiveTab" role="tab" aria-selected="true" aria-controls="receptivePanel" tabindex="0" class="selected">理解練習 · Receptive</button>
+          <button id="productiveTab" role="tab" aria-selected="false" aria-controls="productivePanel" tabindex="-1">表達練習 · Productive</button>
+        </div>
+        <div id="receptivePanel" role="tabpanel" aria-labelledby="receptiveTab">
+        <p>共 8 題，練習分辨規律、實際條件與承諾、現在／未來的設想，以及過去與混合時間的設想。點選答案後會顯示解說，可以重新選答。</p>
+        <p id="quizProgress" role="status"></p>
+        <div id="quizQuestions" class="quiz-stack"></div>
+        </div>
+        <div id="productivePanel" role="tabpanel" aria-labelledby="productiveTab" hidden>
+          <p>從溝通目的出發，選出能表達指定意思的動詞形式。共 8 題；每題都有情境與明確用途，完成兩個空格後按「確認答案」。</p>
+          <p id="productiveProgress" role="status"></p>
+          <div id="productiveQuestions" class="quiz-stack"></div>
         </div>
       </section>
     </main>
   </div>
 
+  <dialog id="purposeDialog" aria-labelledby="purposeDialogTitle">
+    <form method="dialog" style="text-align:right"><button aria-label="關閉用途說明">關閉 ×</button></form>
+    <h2 id="purposeDialogTitle">三種用途差在哪裡？</h2>
+    <p>都有「如果」，也都能提到尚未發生的事。請看說話者是在說規律、做實際提議，還是暫時換個情況來想。</p>
+    <article class="card"><h3>描述事實 / 規則：通常都這樣</h3><p lang="en">If (when) we hire someone, we give them training.</p><p>「我們每次錄用新人，都會提供訓練。」在說公司的慣例，讓看/到這句話的人藉此建立對未來合理的預期。</p></article>
+    <article class="card"><h3>描述意願 / 選擇：條件成立，我就這樣做</h3><p lang="en">If you accept the job, I will arrange your training.</p><p>「你若接受這份工作，我就安排訓練。」這是實際提議或承諾；讓看/到這句話的人據此作決定。</p></article>
+    <article class="card"><h3>設想另一種現實：先假定換個情況，想想會怎樣</h3><p lang="en">If I gave you the job, what training would you need?</p><p>「先假設我給你這份工作，你會需要什麼訓練？」是在試想一個與現實架空/沒有連結的情境，這句本身沒有承諾要錄用或給予訓練，單純是單純針對給予的情境進行假想討論，與承諾或規則/規律的陳述不同，討論的內容不具備現實世界中約束力。</p></article>
+    <p class="muted" style="margin-top:14px">「設想」不等於「不可能」。同一件事可以用不同角度談；用途也可能重疊，要一起看上下文。if 是「如果」；when 常表示「當……時／每當」，不能在每句中直接互換。</p>
+  </dialog>
   <script>
     const mythSelections = new Set();
     const mythOptions = document.querySelectorAll('.myth-option');
@@ -823,6 +860,12 @@
             ${item.claim}<br><br>
             <div class="sentence-box">${item.breaker}</div>
             <span class="muted">${item.note}</span>
+            ${id === 'G' ? `<aside class="context-box" style="margin-top:18px; margin-bottom:0" aria-labelledby="conditionalSourceTitle">
+          <h3 id="conditionalSourceTitle">來源佐證：if 子句也可以用 will / would</h3>
+          <p>Cambridge English Grammar Today 說明：will 和 would 可以出現在條件子句中，表達做某事的意願，或指向後續結果。這支持規則 G 解說中的「will 表意願」用法。</p>
+          <p><a href="https://dictionary.cambridge.org/grammar/british-grammar/mixed-conditionals#:~:text=Conditional%20clauses%20with%20will%20or%20would" target="_blank" rel="noopener noreferrer">閱讀 Cambridge 原文：Conditional clauses with will or would（另開分頁）</a></p>
+          <p class="muted">連結會嘗試定位到該段落；若瀏覽器未自動捲動，請在頁面中搜尋「Conditional clauses with will or would」。</p>
+        </aside>` : ''}
           </div>
         `;
       }).join('');
@@ -840,22 +883,24 @@
     });
 
     const detectiveData = [
-      { sentence: 'When it rains, the ground gets wet.', purpose: 'fact', tense: 'present', explanation: '這句是在描述規則，when 子句用的是現在式。' },
-      { sentence: 'When you heat ice, it melts.', purpose: 'fact', tense: 'present', explanation: '這句是在說一般規律，重點是事實 / 規則，when 子句用現在式。' },
-      { sentence: 'When people do not sleep enough, they feel tired.', purpose: 'fact', tense: 'present', explanation: '這句描述一般情況，屬於事實 / 規則，用現在式。' },
-      { sentence: 'When students practice regularly, they improve faster.', purpose: 'fact', tense: 'present', explanation: '這句是在說常態規律，因此是事實 / 規則，加上現在式。' },
-      { sentence: 'When water reaches 100°C, it boils.', purpose: 'fact', tense: 'present', explanation: '這句描述科學規則，when 子句是現在式。' },
-      { sentence: 'When you agree, I will send the form tonight.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的承諾與回應，when 子句是現在式。' },
-      { sentence: 'When you need extra time, I can wait.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的回應或承諾，when 子句是現在式。' },
-      { sentence: 'When you want, we can start tomorrow.', purpose: 'choice', tense: 'present', explanation: '這句是在給對方選擇，因此歸在選擇 / 意願，when 子句用現在式。' },
-      { sentence: 'When you choose to join us, we will save you a seat.', purpose: 'choice', tense: 'present', explanation: '這句核心是在談選擇與其後果，when 子句是現在式。' },
-      { sentence: 'When you accept the plan, I will help you.', purpose: 'choice', tense: 'present', explanation: '這句是在談接受與承諾之後的結果，when 子句用現在式。' },
-      { sentence: 'When I won three million dollars, I would buy a sports car.', purpose: 'imagine', tense: 'past', explanation: '這裡故意用 when 來讓你觀察：形式上是 past，功能上是在做假想情境。' },
-      { sentence: 'When she were taller, she could reach the shelf.', purpose: 'imagine', tense: 'past', explanation: '這裡的重點是觀察假想情境如何把形式往過去移。' },
-      { sentence: 'When he had more time, he would learn Japanese.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像不同於現況的條件，形式上往過去移。' },
-      { sentence: 'When they lived closer, we would visit them more often.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像與現況不同的條件，因此子句用過去式。' },
-      { sentence: 'When I gave you the job, how much salary would you ask for?', purpose: 'imagine', tense: 'past', explanation: '這句是模擬與假設情境，因此歸在想像，形式上是過去式。' }
+      { contextEnglish: "A child asks why running in the rain is dangerous. You explain what usually happens.", contextChinese: "孩子問為什麼在雨中奔跑很危險。你解釋一般會發生的情況。", sentence: 'If (when) it rains, the ground gets wet.', purpose: 'fact', tense: 'present', explanation: '這句是在描述規則，if 子句用的是現在式。' },
+      { contextEnglish: "A child wants to free a toy frozen inside an ice cube. You explain the science behind a way to get it out.", contextChinese: "孩子想拿出凍在冰塊裡的玩具。你說明一種取出方法背後的科學原理。", sentence: 'If (when) you heat ice, it melts.', purpose: 'fact', tense: 'present', explanation: '這句是在說一般規律，重點是事實 / 規則，if 子句用現在式。' },
+      { contextEnglish: "Your class is making a poster about healthy habits. You explain why a regular bedtime matters.", contextChinese: "班上正在製作健康習慣的海報。你說明規律就寢為什麼很重要。", sentence: 'If (when) people do not sleep enough, they feel tired.', purpose: 'fact', tense: 'present', explanation: '這句描述一般情況，屬於事實 / 規則，用現在式。' },
+      { contextEnglish: "A student thinks musical talent is all you need. You explain why the school sets aside time for daily practice.", contextChinese: "學生認為學音樂只需要天分。你說明學校為什麼安排每天練習的時間。", sentence: 'If (when) students practice regularly, they improve faster.', purpose: 'fact', tense: 'present', explanation: '這句是在說常態規律，因此是事實 / 規則，加上現在式。' },
+      { contextEnglish: "A student asks why a cooking thermometer has a mark at 100°C. You explain the scientific reason for that mark.", contextChinese: "學生問為什麼烹飪溫度計在攝氏一百度有標記。你說明這個標記背後的科學原因。", sentence: 'If (when) water reaches 100°C at standard atmospheric pressure, it boils.', purpose: 'fact', tense: 'present', explanation: '這句描述科學規則，if 子句是現在式。' },
+      { contextEnglish: "You and a colleague are reviewing an application before the deadline. You ask for the final go-ahead and take responsibility for the next step.", contextChinese: "你和同事正在截止前檢查申請表。你徵求對方最後的同意，並承擔接下來的工作。", sentence: 'If you agree, I will send the form tonight.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的承諾與回應，if 子句是現在式。' },
+      { contextEnglish: "A friend apologizes for holding you up while finishing a task. You reassure them that they do not have to rush for your sake.", contextChinese: "朋友因為還沒完成工作、耽誤了你而道歉。你讓對方放心，不必為了你趕工。", sentence: 'If you need extra time, I can wait.', purpose: 'choice', tense: 'present', explanation: '這句在談條件成立後的回應或承諾，if 子句是現在式。' },
+      { contextEnglish: "Your project partner worries that today is too busy. You suggest a different schedule and let them decide.", contextChinese: "合作夥伴擔心今天太忙。你提出另一個時間安排，讓對方決定。", sentence: 'If you want to, we can start tomorrow.', purpose: 'choice', tense: 'present', explanation: '這句是在給對方選擇，因此歸在選擇 / 意願，if 子句用現在式。' },
+      { contextEnglish: "A friend is unsure about coming to a group dinner because places are limited. You make an offer so they know they will be welcome.", contextChinese: "朋友因為聚餐名額有限，還在猶豫要不要參加。你主動提出安排，讓對方知道大家歡迎他。", sentence: 'If you choose to join us, we will save you a seat.', purpose: 'choice', tense: 'present', explanation: '這句核心是在談選擇與其後果，if 子句是現在式。' },
+      { contextEnglish: "Your friend likes your proposal but worries about doing all the work alone. You make a commitment to address that concern.", contextChinese: "朋友喜歡你的提案，卻擔心要獨自完成所有工作。你作出承諾，回應對方的顧慮。", sentence: 'If you accept the plan, I will help you.', purpose: 'choice', tense: 'present', explanation: '這句是在談接受與承諾之後的結果，if 子句用現在式。' },
+      { contextEnglish: "While looking at expensive cars, a friend asks about your dream purchase. You play along with the fantasy rather than make a spending plan.", contextChinese: "看著昂貴的車子時，朋友問你夢想買什麼。你順著話題暢想，並不是在訂購物計畫。", sentence: 'If I won three million dollars, I would buy a sports car.', purpose: 'imagine', tense: 'past', explanation: '這裡用 if 設想中獎後的另一種生活；won 是過去式形式，但說的不是過去發生的事。' },
+      { contextEnglish: "An animator asks why a character needs a stool in this scene. You explore how changing her design could remove the need for that prop.", contextChinese: "動畫師問為什麼這一幕的角色需要凳子。你試想改變她的角色設計，能否讓這個道具變得不必要。", sentence: 'If she were taller, she could reach the shelf.', purpose: 'imagine', tense: 'past', explanation: '這裡的重點是觀察假想情境如何把形式往過去移。' },
+      { contextEnglish: "A friend wonders whether your brother has lost interest in languages. You explain what you think he would do in a life with fewer demands.", contextChinese: "朋友想知道你哥哥是不是對語言失去了興趣。你設想他若生活中少一些負擔，會想做些什麼。", sentence: 'If he had more time, he would learn Japanese.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像不同於現況的條件，形式上往過去移。' },
+      { contextEnglish: "Someone asks why you rarely see your old friends. You picture a different living arrangement to show what is holding you back.", contextChinese: "有人問你為什麼很少見老朋友。你設想另一種居住安排，說明目前是什麼阻礙了你們見面。", sentence: 'If they lived closer, we would visit them more often.', purpose: 'imagine', tense: 'past', explanation: '這句是在想像與現況不同的條件，因此子句用過去式。' },
+      { contextEnglish: "You are interviewing a candidate whose expectations are unclear. You use a trial scenario to explore whether you could reach an agreement, without offering the position yet.", contextChinese: "你正在面試一位期望尚不明確的應徵者。你用一個試想情境探詢雙方能否談得攏，還沒有提出錄用邀請。", sentence: 'If I gave you the job, how much salary would you ask for?', purpose: 'imagine', tense: 'past', explanation: '這句是模擬與假設情境，因此歸在想像，形式上是過去式。' }
     ];
+
+
 
     const detectiveSentence = document.getElementById('detectiveSentence');
     const detectiveFeedback = document.getElementById('detectiveFeedback');
@@ -864,7 +909,6 @@
     const prevDetective = document.getElementById('prevDetective');
     const nextDetective = document.getElementById('nextDetective');
     const checkDetective = document.getElementById('checkDetective');
-    const detectiveShell = document.getElementById('detectiveShell');
     const detectiveConnection = document.getElementById('detectiveConnection');
     const connectionOutput = document.getElementById('connectionOutput');
     const checkConnectionRules = document.getElementById('checkConnectionRules');
@@ -911,6 +955,8 @@
     function renderDetective(showSolvedState = false) {
       const item = detectiveData[detectiveIndex];
       detectiveSentence.textContent = item.sentence;
+      document.getElementById('detectiveContextEnglish').textContent = item.contextEnglish;
+      document.getElementById('detectiveContextChinese').textContent = `（${item.contextChinese}）`;
 
       if (showSolvedState && solvedIndices.has(detectiveIndex)) {
         selectedPurpose = item.purpose;
@@ -932,7 +978,6 @@
     }
 
     function revealDetectiveConnection() {
-      detectiveShell.classList.add('expanded');
       detectiveConnection.classList.add('show');
       renderDetective(true);
     }
@@ -1005,34 +1050,82 @@
 
       const ok = values.fact === 'present' && values.choice === 'present' && values.imagine === 'past';
       connectionOutput.innerHTML = ok
-        ? '答對了。<strong>描述事實 / 規則</strong> 最穩定對應到現在；<strong>描述意願 / 選擇</strong> 也常用現在去描述條件成立；<strong>討論假想情境</strong> 則最穩定地把形式往過去移。'
-        : '再觀察一次。比較穩定的整理是：<strong>事實 / 規則 → 現在</strong>，<strong>意願 / 選擇 → 常見現在</strong>，<strong>假想情境 → 過去</strong>。重點是從用途出發，而不是只看可能性。';
+        ? '答對了。<strong>描述事實 / 規則</strong> 最穩定對應到現在；<strong>描述意願 / 選擇</strong> 也常用現在去描述條件成立；<strong>設想另一種現實</strong> 則最穩定地把形式往過去移。'
+        : '再觀察一次。比較穩定的整理是：<strong>事實 / 規則 → 現在</strong>，<strong>意願 / 選擇 → 常見現在</strong>，<strong>設想另一種現實 → 過去</strong>。重點是從用途出發，而不是只看可能性。';
     });
 
-    const ruleButtons = document.querySelectorAll('.rule-option');
-    const ruleFeedback1 = document.getElementById('ruleFeedback1');
-    const ruleFeedback2 = document.getElementById('ruleFeedback2');
+    const formInputs = ['futureCondition', 'futureAction', 'pastCondition', 'pastAction'].map(id => document.getElementById(id));
+    const formExamples = document.getElementById('formExamples');
+    const discoveryQuestion = document.getElementById('discoveryQuestion2');
+    function resetDiscoveryFollowup() {
+      formExamples.classList.add('hide');
+      discoveryQuestion.classList.add('hide');
+      document.getElementById('discoverySummary').classList.add('hide');
+      document.getElementById('inductionFeedback').className = 'feedback';
+      document.getElementById('ruleFeedback2').className = 'feedback';
+      document.querySelectorAll('.induction-option, .rule-option').forEach(button => {
+        button.classList.remove('selected');
+        button.setAttribute('aria-pressed', 'false');
+      });
+    }
+    formInputs.forEach(input => input.addEventListener('change', () => {
+      resetDiscoveryFollowup();
+      document.getElementById('hypotheticalFeedback').className = 'feedback';
+    }));
+    document.getElementById('checkHypotheticalForms').addEventListener('click', () => {
+      resetDiscoveryFollowup();
+      const [futureCondition, futureAction, pastCondition, pastAction] = formInputs.map(input => input.value);
+      const feedback = document.getElementById('hypotheticalFeedback');
+      let message;
+      let correct = false;
+      if (formInputs.some(input => !input.value)) {
+        message = '請先完成兩句的四個空格。';
+      } else if (futureCondition === 'win' || pastCondition === 'win' || futureAction === 'will buy' || pastAction === 'will buy') {
+        message = '這裡要表達的是與現實拉開距離的另一種設想（detached alternative），不是一般規律，也不是實際條件下的承諾或意願。請重新考慮 win / will buy 是否符合這次的說話角度。';
+      } else if (futureCondition === 'won' && futureAction === 'would buy' && pastCondition === 'had won' && pastAction === 'would have bought') {
+        correct = true;
+        message = '答對了！未來用 won / would buy 表達拉開距離的設想；過去用 had won / would have bought 回看先前中獎本來會帶來的購車結果。請繼續下方的思考題。';
+        discoveryQuestion.classList.remove('hide');
+      } else if (futureCondition === 'won' && pastCondition === 'won') {
+        message = '兩個條件都選了 won。若後續行動也都用 would buy，拿掉時間詞就會得到相同的句子，無法從動詞形式清楚分辨兩種設想。請比較下方十個例句，找出區分方式。';
+        formExamples.classList.remove('hide');
+        if (futureAction !== 'would buy' || pastAction !== 'would buy') message += '另外，你的條件與結果形式尚未配合；也請留意例句中兩邊的搭配。';
+      } else {
+        message = '完成式把焦點放在先前事件及其後續影響。哪個情境是在回看「先前若中了獎，後來就會有不同的購車結果」？是明天的設想，還是上個月的另一種走向？請據此重新選擇 had won / would have bought 的位置，並留意條件與結果要配合各自的時間。';
+      }
+      feedback.textContent = message;
+      feedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+    });
+    const inductionButtons = document.querySelectorAll('.induction-option');
+    inductionButtons.forEach(button => button.addEventListener('click', () => {
+      inductionButtons.forEach(option => {
+        option.classList.toggle('selected', option === button);
+        option.setAttribute('aria-pressed', String(option === button));
+      });
+      const good = button.dataset.answer === 'B';
+      const feedback = document.getElementById('inductionFeedback');
+      feedback.textContent = good
+        ? '整理正確！這些例句中，過去式形式用來拉開與現實的距離；設想過去的事件與結果時，再用 had + p.p. 與 would have + p.p.。請繼續下方的思考題，也可以回頭修正兩句。'
+        : '再比較兩組：未來組的 if 子句用什麼形式？過去組除了動詞往過去移，還多了哪些字？';
+      feedback.className = `feedback show ${good ? 'good' : 'bad'}`;
+      discoveryQuestion.classList.toggle('hide', !good);
+      if (!good) document.getElementById('discoverySummary').classList.add('hide');
+    }));
 
+    const ruleButtons = document.querySelectorAll('.rule-option');
+    const ruleFeedback2 = document.getElementById('ruleFeedback2');
     ruleButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const questionId = button.dataset.q;
-        const answer = button.dataset.answer;
-        document.querySelectorAll(`.rule-option[data-q="${questionId}"]`).forEach(item => item.classList.remove('selected'));
-        button.classList.add('selected');
-
-        if (questionId === 'q1') {
-          const good = answer === 'no';
-          ruleFeedback1.textContent = good
-            ? '答對了。因為「想像未來」和「想像現在不同的情況」都可能先用 past form 來做距離感，所以只靠 past 還不夠分辨。'
-            : '不太對。因為想像未來或現在不同情況時，也常已經用了 past form，所以光靠這個還不夠。';
-          ruleFeedback1.className = `feedback show ${good ? 'good' : 'bad'}`;
-        } else {
-          const good = answer === 'B';
-          ruleFeedback2.textContent = good
-            ? '答對了。想像過去不是單純把時間往前放，而是把焦點放在一個更早的行動，並強調它本來會導致不同的後果，這和 perfect 的 framing 重疊。'
-            : '再想想。這裡不是「不真實就一律完成式」，而是因為說話者在回看一個更早的行動，並框出它後來本來可能造成的不同結果。';
-          ruleFeedback2.className = `feedback show ${good ? 'good' : 'bad'}`;
-        }
+        ruleButtons.forEach(option => {
+          option.classList.toggle('selected', option === button);
+          option.setAttribute('aria-pressed', String(option === button));
+        });
+        const good = button.dataset.answer === 'B';
+        ruleFeedback2.textContent = good
+          ? '答對了。想像過去不是單純把時間往前放，而是把焦點放在一個更早的行動，並強調它本來會導致不同的後果，這和 perfect 的 framing 重疊。'
+          : '再想想。這裡不是「不真實就一律完成式」，而是因為說話者在回看一個更早的行動，並框出它後來本來可能造成的不同結果。';
+        ruleFeedback2.className = `feedback show ${good ? 'good' : 'bad'}`;
+        if (good) document.getElementById('discoverySummary').classList.remove('hide');
       });
     });
 
@@ -1076,18 +1169,149 @@
     purposeSelect.addEventListener('change', renderBuilder);
     subjectSelect.addEventListener('change', renderBuilder);
 
-    const quizOptions = document.querySelectorAll('.quiz-option');
-    const quizFeedback = document.getElementById('quizFeedback');
+    const purposeDialog = document.getElementById('purposeDialog');
+    document.getElementById('purposeHelp').addEventListener('click', () => purposeDialog.showModal());
+    purposeDialog.addEventListener('click', event => {
+      if (event.target === purposeDialog) {
+        const rect = purposeDialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) purposeDialog.close();
+      }
+    });
 
-    quizOptions.forEach(button => {
-      button.addEventListener('click', () => {
-        const correct = button.dataset.correct === 'true';
-        quizFeedback.textContent = correct
-          ? '答對了。這句的核心邏輯是：說話者在想像過去，所以用了完成式來框出較早的行動與後來結果。'
-          : '不太對。這句不能簡化成「不可能就用完成式」，重點應該放在它是在想像過去，而且在看一個早先行動本來會帶來的不同結果。';
-        quizFeedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+    const quizData = [
+      { sentence: 'If (when) you heat ice, it melts.', question: '這句主要在做什麼？', options: ['承諾幫忙融化冰塊', '描述一般規律', '設想過去不同的結果'], answer: 1, explanation: '在一般條件下，加熱冰就會融化。這裡用現在式描述規律，when 也能表達「每當」。' },
+      { sentence: 'If you agree, I will send the form tonight.', question: '說話者想表達什麼？', options: ['只要你同意，我就承諾今晚寄出', '你已經同意，而且我已寄出', '每次同意都必然產生的自然規律'], answer: 0, explanation: '這是以對方同意為條件的實際承諾；agree 用現在式，並不表示同意已經發生。' },
+      { sentence: 'If I were taller, I could reach the shelf.', question: 'were 在這裡表示什麼？', options: ['以前曾經比較高', '設想現在身高不同', '因為不可能，所以用了完成式'], answer: 1, explanation: '說話者設想自己現在更高的情況。were 是過去式形式，但這裡用來與現況拉開距離，不是在敘述過去。' },
+      { sentence: 'If I won the lottery next week, I would buy a sports car.', question: '明明說 next week，為什麼用 won？', options: ['next week 其實指過去', '凡是未來都必須用過去式', '是在設想中獎後的另一種生活'], answer: 2, explanation: 'won 在此標示設想的角度；時間仍是下週。這個形式本身不表示中獎絕對不可能。' },
+      { sentence: 'If I had studied harder last night, I would have passed the test this morning.', question: '這句如何安排時間與結果？', options: ['因為不可能，所以所有動詞都用完成式', '描述每天讀書都會及格的規律', '設想昨晚更努力，今早就有不同結果'], answer: 2, explanation: 'had studied 設想未發生的過去條件；would have passed 表達過去本來會出現的結果。' },
+      { sentence: 'If I had gone to bed earlier last night, I would not be so tired now.', question: '哪個解讀正確？', options: ['設想昨晚改變，現在就不會這麼累', '條件和結果一定都發生在昨晚', '兩邊一定要用相同的完成式'], answer: 0, explanation: '這是混合時間：had gone 指昨晚的另一種選擇，would not be 指現在的不同結果。形式要配合各自的時間。' },
+      { sentence: 'If you will help with the dishes, I can cook dinner.', question: 'if 子句中的 will 在這裡最自然的意思是？', options: ['只要提到未來，if 後一定加 will', '你願意幫忙洗碗', '你昨天已經洗好碗'], answer: 1, explanation: 'will 在這裡表達「願意」。這句以對方的意願為條件，因此不能把「if 後不能有 will」當成絕對規則。' },
+      { sentence: 'If you accept the offer, we will reserve a seat for you.', question: '將 if 換成 when，語氣會怎樣改變？', options: ['完全一樣，任何 if 都能換 when', '變成在設想沒有發生的過去', '從「如果接受」變為較預期你會接受的「當你接受時」'], answer: 2, explanation: 'if 保留是否接受的條件；when 把接受當作較預期會到來的時間點。一般規律中常能互換，在這類選擇情境中語意就有差別。' }
+    ];
+    const quizAnswers = new Map();
+    const quizQuestions = document.getElementById('quizQuestions');
+    function updateQuizProgress() {
+      const correct = [...quizAnswers].filter(([index, answer]) => quizData[index].answer === answer).length;
+      document.getElementById('quizProgress').textContent = `已作答 ${quizAnswers.size} / ${quizData.length} 題，目前答對 ${correct} 題。`;
+    }
+    quizData.forEach((item, index) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `<h3>第 ${index + 1} 題：${item.question}</h3><div class="sentence-box" lang="en">${item.sentence}</div><div class="option-list" role="group" aria-label="第 ${index + 1} 題選項"></div><div class="feedback" role="status"></div>`;
+      const options = card.querySelector('.option-list');
+      item.options.forEach((label, answer) => {
+        const button = document.createElement('button');
+        button.className = 'quiz-option';
+        button.textContent = label;
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => {
+          quizAnswers.set(index, answer);
+          options.querySelectorAll('button').forEach(option => {
+            option.classList.toggle('selected', option === button);
+            option.setAttribute('aria-pressed', String(option === button));
+          });
+          const correct = answer === item.answer;
+          const feedback = card.querySelector('.feedback');
+          feedback.textContent = `${correct ? '答對了。' : '再想想。'}${item.explanation}`;
+          feedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+          updateQuizProgress();
+        });
+        options.appendChild(button);
+      });
+      quizQuestions.appendChild(card);
+    });
+    updateQuizProgress();
+
+    const practiceTabs = [document.getElementById('receptiveTab'), document.getElementById('productiveTab')];
+    function activatePracticeTab(activeIndex) {
+      practiceTabs.forEach((tab, index) => {
+        const active = index === activeIndex;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        tab.classList.toggle('selected', active);
+        document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+      });
+    }
+    practiceTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activatePracticeTab(index));
+      tab.addEventListener('keydown', event => {
+        let target;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') target = 1 - index;
+        else if (event.key === 'Home') target = 0;
+        else if (event.key === 'End') target = 1;
+        else return;
+        event.preventDefault();
+        activatePracticeTab(target);
+        practiceTabs[target].focus();
       });
     });
+    const productiveData = [
+      { context: 'A child wants to protect an ice sculpture at an outdoor party.', chinese: '孩子想保護戶外派對上的冰雕。', purpose: '說明一般規律，解釋為什麼要讓冰雕遠離熱源。', parts: ['If you ', ' ice, it ', '.'], forms: [['heated', 'heat', 'had heated'], ['would melt', 'will melt', 'melts']], answers: ['heat', 'melts'], explanation: '這是在說一般規律，兩邊用現在式；不是承諾，也不是設想另一種現實。' },
+      { context: 'Your colleague is checking an application before the deadline.', chinese: '同事正在截止前檢查申請表。', purpose: '作出實際承諾：只要對方同意，你今晚就寄出表單。', parts: ['If you ', ', I ', ' the form tonight.'], forms: [['agree', 'agreed', 'had agreed'], ['would have sent', 'would send', 'will send']], answers: ['agree', 'will send'], explanation: 'agree 保留對方是否同意的條件，will send 表達你在條件成立後的承諾。' },
+      { context: 'You are looking at a high shelf that you cannot reach.', chinese: '你看著自己搆不到的高架子。', purpose: '設想現在身高不同會怎樣，而不是回憶以前的身高。', parts: ['If I ', ' taller, I ', ' the shelf now.'], forms: [['am', 'had been', 'were'], ['could have reached', 'could reach', 'can reach']], answers: ['were', 'could reach'], explanation: 'were 表示與現況拉開距離的設想，could reach 表達現在這個不同條件下的能力。' },
+      { context: 'A friend asks about your dream purchase while you look at luxury cars.', chinese: '看豪華車時，朋友問你夢想買什麼。', purpose: '暢想未來中獎後的另一種生活，並非作出購車承諾。', parts: ['If I ', ' three million dollars tomorrow, I ', ' a sports car.'], forms: [['win', 'won', 'had won'], ['will buy', 'would have bought', 'would buy']], answers: ['won', 'would buy'], explanation: 'won / would buy 表達拉開距離的未來設想；tomorrow 並不要求使用 will。' },
+      { context: 'You failed this morning’s test and are thinking about last night.', chinese: '你今天早上考試沒及格，正在回想昨晚。', purpose: '設想昨晚採取不同的行動，今早的結果本來就會不同。', parts: ['If I ', ' harder last night, I ', ' the test this morning.'], forms: [['studied', 'had studied', 'study'], ['would pass', 'will pass', 'would have passed']], answers: ['had studied', 'would have passed'], explanation: 'had studied 與 would have passed 分別標示過去沒有發生的讀書條件與本來會出現的考試結果。' },
+      { context: 'You stayed up late last night and feel exhausted at work now.', chinese: '你昨晚熬夜，現在上班覺得很累。', purpose: '設想昨晚改變就寢時間，對現在的精神狀況產生不同影響。', parts: ['If I ', ' to bed earlier last night, I ', ' so tired now.'], forms: [['went', 'go', 'had gone'], ['would not have been', 'would not be', 'will not be']], answers: ['had gone', 'would not be'], explanation: '條件在昨晚，用 had gone；結果在現在，用 would not be。這是混合時間的設想。' },
+      { context: 'You and your housemate are deciding how to divide tonight’s chores.', chinese: '你和室友正在分配今晚的家事。', purpose: '明確以對方「願意」洗碗為條件，提出你可以煮飯；不是只談洗碗這件事是否發生。', parts: ['If you ', ' with the dishes, I ', ' dinner.'], forms: [['help', 'will help', 'had helped'], ['could have cooked', 'would cook', 'can cook']], answers: ['will help', 'can cook'], explanation: 'will help 在這裡明確表達「願意幫忙」，can cook 提出你可以負責的事。help 也能形成句子，但沒有明說本題指定的意願。' },
+      { context: 'A friend worries about keeping you waiting while finishing a task.', chinese: '朋友還在完成工作，擔心讓你等太久。', purpose: '實際提出可以等候的意願，讓對方自行決定是否需要更多時間。', parts: ['If you ', ' extra time, I ', '.'], forms: [['had needed', 'needed', 'need'], ['would have waited', 'can wait', 'would wait']], answers: ['need', 'can wait'], explanation: 'need 用現在式提出實際條件；can wait 表達你現在能提供的配合，不是回頭設想另一種過去。' }
+    ];
+    const productiveAnswers = new Map();
+    function updateProductiveProgress() {
+      const correct = [...productiveAnswers.values()].filter(Boolean).length;
+      document.getElementById('productiveProgress').textContent = `已作答 ${productiveAnswers.size} / ${productiveData.length} 題，目前答對 ${correct} 題。`;
+    }
+    productiveData.forEach((item, index) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `<h3>第 ${index + 1} 題</h3><aside class="context-box"><h3>Context（情境）</h3><p lang="en">${item.context}</p><p class="context-translation">（${item.chinese}）</p></aside><p><strong>你要表達的用途：</strong>${item.purpose}</p>`;
+      const sentence = document.createElement('div');
+      sentence.className = 'sentence-box sentence-builder';
+      sentence.lang = 'en';
+      const inputs = [];
+      item.parts.forEach((part, partIndex) => {
+        sentence.appendChild(document.createTextNode(part));
+        if (partIndex >= item.forms.length) return;
+        const select = document.createElement('select');
+        select.setAttribute('aria-label', `表達練習第 ${index + 1} 題，第 ${partIndex + 1} 個動詞`);
+        ['', ...item.forms[partIndex]].forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value || '___';
+          select.appendChild(option);
+        });
+        inputs.push(select);
+        sentence.appendChild(select);
+      });
+      card.appendChild(sentence);
+      const check = document.createElement('button');
+      check.className = 'btn-primary';
+      check.textContent = '確認答案';
+      const feedback = document.createElement('div');
+      feedback.className = 'feedback';
+      feedback.setAttribute('role', 'status');
+      check.addEventListener('click', () => {
+        if (inputs.some(input => !input.value)) {
+          feedback.textContent = '請先選好兩個動詞形式。';
+          feedback.className = 'feedback show bad';
+          return;
+        }
+        const correct = inputs.every((input, i) => input.value === item.answers[i]);
+        productiveAnswers.set(index, correct);
+        feedback.textContent = `${correct ? '答對了。' : '再想想指定用途與條件、結果的時間。'}${item.explanation}`;
+        feedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+        updateProductiveProgress();
+      });
+      inputs.forEach(input => input.addEventListener('change', () => {
+        productiveAnswers.delete(index);
+        feedback.className = 'feedback';
+        feedback.textContent = '';
+        updateProductiveProgress();
+      }));
+      card.appendChild(check);
+      card.appendChild(feedback);
+      document.getElementById('productiveQuestions').appendChild(card);
+    });
+    updateProductiveProgress();
 
     renderDetective();
     renderBuilder();
